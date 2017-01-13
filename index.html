@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Site pessoal de Miguel Angelo</title>
+  <link href="http://www.masbicudo.com/assets/css/style.css?v=51424e9bd5cc979d434ecca61c20de7afa282c8c" rel="stylesheet">
+  <link href="main.css" rel="stylesheet">
+  <script src="main.js"></script>
+  <style>
+    p.page-desc {
+      vertical-align: bottom;
+    }
+    .user-bar {
+      padding: 15px;
+      padding-right: 100px;
+    }
+  </style>
+</head>
+<body>
+    <div class="container" id="root">
+        <div class="container main">
+        
+            <!-- MENU LATERAL ESQUERDO -->
+
+            <div class="left grow">
+                <img class="logo" alt="LOGO" src="masbicudo.jpg">
+                </img>
+                <ul class="menu">
+                    <!-- <li>Modules</li> -->
+                    <ul class="menu">
+                        <li>
+                            <a href="#" onclick="toggleMenu('homeSections')">About me</a>
+                            <ul class="menu" id="homeSections">
+                                <li><a href="index.html">Main</a></li>
+                                <li><a href="resume.html">Resume</a></li>
+                                <li><a href="bio.html">Short Bio</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" onclick="toggleMenu('users')">Projects</a>
+                            <ul class="menu hidden" id="users">
+                                <li><a href="#">Users 1</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+            <div class="container grow">
+                <div class="user-bar">
+                    <span>Miguel Angelo's website!</span>
+                    <!-- <span class="btn-group" style="display: inline-block; right: -3em;"> -->
+                        <!-- <button class="noselect" style="font-size: 1.25em; width: 3em; min-height: 25px;" onclick="grow()" ondblclick="grow()">A+</button> -->
+                        <!-- <button class="noselect" style="font-size: 0.8em; width: 3em; min-height: 16px;" onclick="shrink()" ondblclick="shrink()">A-</button> -->
+                    <!-- </span> -->
+                </div>
+                <div class="page-header">
+                    <ul class="tracker">
+                        <li><a href="index.html">&nbsp;</a></li>
+                    </ul>
+                    <h1>About me</h1>
+                    <p class="page-desc">
+                        <br/>
+                        A short overview of my formation.
+                    </p>
+                </div>
+                <div class="container grow">
+                    <!-- <div class="right grow"> -->
+                        <!-- <ul class="menu"> -->
+                            <!-- <li>Commands</li> -->
+                            <!-- <ul class="menu"> -->
+                                <!-- <li><a href="#">Command 1</a></li> -->
+                                <!-- <li><a href="#">Command 2</a></li> -->
+                            <!-- </ul> -->
+                        <!-- </ul> -->
+                    <!-- </div> -->
+                    <div class="container grow">
+                        <div class="content">
+                            <h2>Works</h2>
+                            <p>
+                              
+                            </p>
+                        </div>
+                        <!-- <div class="container btn-bar grow"> -->
+                            <!-- <div class="btn-group"> -->
+                                <!-- <button>OK</button> -->
+                                <!-- <button>Cancel</button> -->
+                            <!-- </div> -->
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container bottom-notices grow">
+            <div>
+                Layout created by Miguel Angelo.<br />
+                You may not use, distribute, or create derivative work
+                from this without author written authorization.
+            </div>
+        </div>
+    </div>
+</body>
+</html>
