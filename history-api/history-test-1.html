@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>History API - test #1</title>
   <link href="http://www.masbicudo.com/assets/css/style.css?v=51424e9bd5cc979d434ecca61c20de7afa282c8c" rel="stylesheet">
-  <script src="ndarray.js"></script>
+  <script src="mdarray.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      var a = NDArray(document.getElementsByTagName("a"));
+      var a = MDArray(document.getElementsByTagName("a"));
       a.addEventListener("click", function(e) {
         e.preventDefault();
         data.innerHTML = e.target.innerHTML;

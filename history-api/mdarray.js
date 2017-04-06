@@ -1,8 +1,29 @@
-function NDArray(items, shape, options) {
+function MDArray(items, shape, options) {
+  /*
+  items Array
+    Elements that constitute the MDArray.
+  shape Array of Int
+    Indicates the length of each MDArray dimension.
+  options Object
+    autoreduce bool
+      When a property is read, if all values are equal,
+      return that value instead of another MDArray.
+    funcBehavior String
+      "get": get element, arguments are the coordinates
+      "call": call inner functions, arguments are passed to inner functions
+    funcProcessor (Function, Options) => Function
+      Redefine function behaviour to accept MDArrays as arguments.
+      Some possibilities are:
+        - `null`: return original function
+        - `MDArray.zipMinFunc`
+        - `MDArray.zipMaxFunc`
+        - `MDArray.mulFunc`
+  */
   var undefined;
   items = Array.prototype.slice.call(items)
-  options = options || {}
-  var isFunc = items.every(function(x){return x instanceof Function});
+  options = options || MDArray.options || {}
+  var isFunc = options.funcBehavior == "call"
+            && items.every(function(x){return x instanceof Function});
   shape = Array.isArray(shape) ? shape : [shape === undefined ? items.length : shape];
   shape = shape.map(function(x){return parseInt(x)});
   if (!shape.every(function(x){return !isNaN(x)}))
@@ -22,16 +43,21 @@ function NDArray(items, shape, options) {
     return s;
   };
   var fn = isFunc ?
-    function() {
+    function MDFnCaller() {
+      // calling the MDArray as a function will call each inner function
       var a = arguments;
-      return NDArray(items.map(function(x){return x.apply(this, a)}), shape, options)
+      return MDArray(items.map(function(x){return x.apply(this, a)}), shape, options)
     } :
-    function() {
-      if (arguments.length != shape.length) throw new Error("NDArray has " + shape.length + "dimensions.")
+    function MDItemGetter() {
+      // calling the MDArray as a function returns the item at the specified location
+      // e.g.:
+      //    mda(1,2): returns the element at position (1, 2)
+      if (arguments.length != shape.length) throw new Error("MDArray has " + shape.length + "dimensions.")
       var index = calcIndex(arguments);
       return items[index];
     };
-  fn.__proto__ = NDArray.prototype;
+  fn = isFunc && options.funcProcessor ? options.funcProcessor(fn, options) : fn;
+  fn.__proto__ = MDArray.prototype;
   Object.defineProperty(fn, "__shape__", { get: function(){return shape} });
   Object.defineProperty(fn, "__items__", { get: function(){return items} });
   Object.defineProperty(fn, "__dims__", { get: function(){return shape.length} });
@@ -65,12 +91,12 @@ function NDArray(items, shape, options) {
                   if (items.every(function(x){return x[k]===r0 && !(x[k] instanceof Function)}))
                     return r0;
                 }
-                return NDArray(items.map(function(x){
+                return MDArray(items.map(function(x){
                   return x[k] instanceof Function ? x[k].bind(x) : x[k]
                 }), shape, options)
               },
               set: function(y) {
-                if (y instanceof NDArray)
+                if (y instanceof MDArray)
                   items.map(function(x,i){x[k] = y.__items__[i]})
                 else
                   items.map(function(x){x[k] = y})
@@ -89,12 +115,12 @@ function NDArray(items, shape, options) {
         if (items.every(function(x){return x[k]===r0 && !(x[k] instanceof Function)}))
           return r0;
       }
-      return NDArray(items.map(function(x){
+      return MDArray(items.map(function(x){
         return x[k] instanceof Function ? x[k].bind(x) : x[k]
       }), shape, options)
     },
-    set: function(o, k, v) {
-      if (y instanceof NDArray)
+    set: function(o, k, y) {
+      if (y instanceof MDArray)
         items.map(function(x,i){x[k] = y.__items__[i]})
       else
         items.map(function(x){x[k] = y})
@@ -102,41 +128,44 @@ function NDArray(items, shape, options) {
   })
   return fn;
 }
-NDArray.prototype.__proto__ = Array.prototype;
-NDArray.zipMinFunc = function(fn, options) {
-  return function() {
+MDArray.prototype.__proto__ = Array.prototype;
+MDArray.zipMinFunc = function(fn, options) {
+  return function MDZipMinFn() {
     var args = Array.prototype.slice.call(arguments)
-    var cnt = Math.min.apply(null, args
-      .filter(function(x){return x instanceof NDArray})
-      .map(function(x){return x.__items__.length}));
+    var mdargs = args.filter(function(x){return x instanceof MDArray});
+    var cnt = mdargs.length
+      ? Math.min.apply(null, mdargs.map(function(x){return x.__items__.length}))
+      : 1;
+    var items = []
+    for(var i = 0; i < cnt; i++) {
+      var subargs = args.map(function(x){
+        return x instanceof MDArray ? x.__items__[i] : x
+      });
+      items.push(fn.apply(this, subargs))
+    }
+    return MDArray(items, [items.length], options)
+  }
+}
+MDArray.zipMaxFunc = function(fn, options) {
+  return function MDZipMaxFn() {
+    var args = Array.prototype.slice.call(arguments)
+    var mdargs = args.filter(function(x){return x instanceof MDArray});
+    var cnt = mdargs.length
+      ? Math.max.apply(null, mdargs.map(function(x){return x.__items__.length}))
+      : 1;
     var items = []
     for(var i = 0; i < cnt; i++) {
       items.push(fn.apply(this, args.map(function(x){
-        return x instanceof NDArray ? x.__items__[i] : x
+        return x instanceof MDArray ? x.__items__[i] : x
       })))
     }
-    return NDArray(items, [items.length], options)
+    return MDArray(items, [items.length], options)
   }
 }
-NDArray.zipMaxFunc = function(fn, options) {
-  return function() {
+MDArray.mulFunc = function(fn, options) {
+  return function MDAltMulFn() {
     var args = Array.prototype.slice.call(arguments)
-    var cnt = Math.max.apply(null, args
-      .filter(function(x){return x instanceof NDArray})
-      .map(function(x){return x.__items__.length}));
-    var items = []
-    for(var i = 0; i < cnt; i++) {
-      items.push(fn.apply(this, args.map(function(x){
-        return x instanceof NDArray ? x.__items__[i] : x
-      })))
-    }
-    return NDArray(items, [items.length], options)
-  }
-}
-NDArray.mulFunc = function(fn, options) {
-  return function() {
-    var args = Array.prototype.slice.call(arguments)
-    var cnt = args.map(function(x){return x instanceof NDArray ? x.__items__.length : 1})
+    var cnt = args.map(function(x){return x instanceof MDArray ? x.__items__.length : 1})
     cnt.unshift(1)
     var i = 1;
     for(; i < cnt.length; i++)
@@ -145,11 +174,11 @@ NDArray.mulFunc = function(fn, options) {
     for(var i = 0; i < max; i++) {
       var t = args.length;
       items.push(fn.apply(this, args.map(function(x,j){
-        return x instanceof NDArray ? x.__items__[Math.floor((i%cnt[j+1])/cnt[j])] : x
+        return x instanceof MDArray ? x.__items__[Math.floor((i%cnt[j+1])/cnt[j])] : x
       })))
     }
-    var shape = args.filter(function(x){return x instanceof NDArray}).map(function(x){return x.__items__.length});
-    return NDArray(items, shape, options)
+    var shape = args.filter(function(x){return x instanceof MDArray}).map(function(x){return x.__items__.length});
+    return MDArray(items, shape, options)
   }
 }
-NDArray.func = NDArray.zipMinFunc
+MDArray.func = MDArray.zipMinFunc
