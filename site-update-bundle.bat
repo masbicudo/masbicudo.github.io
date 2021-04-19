@@ -1,2 +1,2 @@
 @echo off
-bundle update
+call bundle update
