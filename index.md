@@ -3,22 +3,18 @@ title: MASBicudo Garage!
 layout: default
 ---
 
-<span style="float: right">![Miguel Angelo](assets/images/masb.jpg)</span>
+<span style="float: right; transform: rotate(10deg);">![Miguel Angelo](assets/images/masb.png)</span>
 Hi wonderful visitors!
 
-This is me...
+That is me --- --- --- >
 
-My name is Miguel Angelo, and this is my personal garage-page.
+My name is Miguel Angelo, and this is my personal web-page.
 
-# Latest News
+# Works in Computer Graphics
 
-Here are the latest news in my garage:
-
+- [SVD existence proof](Mathematics-Tools/svd-proof)
 - [C.G. Final Work](WebGL-Tutorials/cg-t2/)
-
-# My experiments
-
-- [Computer Graphics](WebGL-Tutorials)
+- [WebGL experiments](WebGL-Tutorials)
 
 # Education
 
@@ -47,3 +43,16 @@ Three generations
 ![Three generations](assets/images/3-gen.jpg)
 
 </div>
+
+# Find me
+
+- [LinkedIn](https://www.linkedin.com/in/masbicudo)
+- [GitHub](https://github.com/masbicudo)
+- [pt.StackOverflow](https://pt.stackoverflow.com/users/1925/miguel-angelo)
+- [StackOverflow](https://stackoverflow.com/users/195417/miguel-angelo)
+<!-- - [StackShare](https://stackshare.io/masbicudo) -->
+- [NuGet](https://www.nuget.org/profiles/masbicudo)
+<!-- - [FaceBook](https://www.facebook.com/masbicudo) -->
+<!-- - [Academia.edu](https://independent.academia.edu/masbicudo) -->
+<!-- - [Lattes](http://lattes.cnpq.br/8332391873332216) -->
+<!-- - [Twitter](https://twitter.com/masbicudo) -->
