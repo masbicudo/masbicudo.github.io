@@ -12,7 +12,7 @@ My name is Miguel Angelo, and this is my personal web-page.
 
 # Works in Computer Graphics
 
-- [SVD existence proof](Mathematics-Tools/svd-proof)
+- [SVD existence proof](\Mathematics-Learning-Tools/Linear-Algebra/svd-existence-proof)
 - [C.G. Final Work](WebGL-Tutorials/cg-t2/)
 - [WebGL experiments](WebGL-Tutorials)
 
